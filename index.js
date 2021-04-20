@@ -56,7 +56,7 @@ cols.forEach((col) => {
 
 chance.mixin({
     'user': function() {
-        return `${chance.guid()},${chance.integer({"min": earliest, "max": now})}`;
+        return `${chance.guid()}`;
     }
 });
 
@@ -65,7 +65,16 @@ let allCols = columns.map(col => col.header).join();
 csvFile += allCols + `\n`
 
 for (let i = 0; i < rows; i++) {
-    csvFile += `${chance.user()},${chooseRowValues(columns)}\n`
+    let user = chance.user();
+    while (chance.bool({
+            likelihood: chance.normal({
+                mean: 50
+            })
+        })) {
+        csvFile += `${user},${chance.integer({"min": earliest, "max": now})},${chooseRowValues(columns)}\n`;
+        i++;
+    }
+
 }
 
 
