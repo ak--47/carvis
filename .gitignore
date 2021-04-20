@@ -5,6 +5,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+#data folder
+data/*
+!data/.gitkeep 
+
+#osx remnants
+.DS_Store
+
 # Runtime data
 pids
 *.pid
