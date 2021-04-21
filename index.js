@@ -59,6 +59,7 @@ const earliestTime = now - (secondsInDay * days);
 let numUsers = 0;
 
 const chance = new Chance(seed);
+const hash = new Chance();
 const columns = [];
 
 cols.forEach((col) => {
@@ -93,7 +94,7 @@ for (let i = 0; i < rows*2; i++) {
                 dev: 10
             })
         })) {
-        csvFile += `${chance.hash()},${user},${getTime(earliestTime, now)},${chooseRowValues(columns)}\n`;
+        csvFile += `${hash.hash()},${user},${getTime(earliestTime, now)},${chooseRowValues(columns)}\n`;
         i++;
     }
 
