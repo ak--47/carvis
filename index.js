@@ -133,7 +133,7 @@ function getTime(earliest = earliestTime, latest = now) {
         });
     }
     //10% of the time, make events today
-    if (chance.bool({likelihood: 10})) {
+    if (chance.bool({likelihood: 5})) {
     	chosenDate = chance.integer({
     		"min": now - (secondsInHour*chance.integer({min: 1, max: 12})),
     		"max": now
