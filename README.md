@@ -13,8 +13,12 @@ The primarily motivation for this utility is to feed reverse-ETLs (like [Census]
   - clone the repo
   `git clone https://github.com/ak--47/carvis.git` 
 
-  - change your current working directory to `/carvis` to use it:
+  - change your current working directory to `/carvis` to :
   `cd ~/carvis` 
+- install dependencies:
+`npm install`
+  
+-  see [usage](#usage) for use-cases
   
 # usage
   - generate some fake data with all the default params
