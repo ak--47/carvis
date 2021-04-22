@@ -34,17 +34,17 @@ The primarily motivation for this utility is to feed reverse-ETLs (like [Census]
 Carvis lets you control the data that gets built in the CSV file. The general usage is:
 
 ```
-npm run carvis -- -{{option}} {{value}}
+npm run carvis -- --{{option}} {{value}}
 ```
 here are the available options; all are optional and can be used in *any* order:
 
 | option | Alias | Purpose |
 | ------ | ------ | ------ |
-| `-cols` |`-c` | define the columns **AND** values for your CSV file. the format is `columnName:value1,value2,value3` ... you can use this to create multiple columns |
-| `-rows` | `-r` | the number of rows/records to generate (default: `1000`) |
-| `-days` | `-d` | the number of days (since today) to consider (default: `30`) |
-| `-seed` | `-s` | any alphanumeric phrase which controls how `guid` is generated; use the same seed to get the same users across multiple files
-|`-people`| `-p`| generate people profiles (including `$name`, `$email`, `$avatar`, etc...)
+| `--cols` |`-c` | define the columns **AND** values for your CSV file. the format is `columnName:value1,value2,value3` ... you can use this to create multiple columns |
+| `--rows` | `-r` | the number of rows/records to generate (default: `1000`) |
+| `--days` | `-d` | the number of days (since today) to consider (default: `30`) |
+| `--seed` | `-s` | any alphanumeric phrase which controls how `guid` is generated; use the same seed to get the same users across multiple files
+|`--people`| `-p`| generate people profiles (including `$name`, `$email`, `$avatar`, etc...)
 
 see [examples](#examples) for some recipes
 
