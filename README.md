@@ -3,12 +3,10 @@
 ![Carvis](https://aktunes.neocities.org/carvisLogo.png)
 
 **a maker of CSV files** 
- by AK 
- ak@mixpanel.com
- 
-Carvis can make massive amounts of realistic, fake data as CSV files which map effortlessly to Mixpanel events, or user profiles.
 
-The primarily motivation for this utility is to feed reverse-ETLs (like [Census](https://www.getcensus.com/) or [Hightouch](https://hightouch.io/)) which demonstrate how tabular data can be mapped to event (or people) data.
+Carvis can make massive amounts of realistic, fake data as CSV files. These files map effortlessly to Mixpanel events, or user profiles.
+
+The primarily motivation for this utility is to feed reverse-ETLs (like [Census](https://www.getcensus.com/) or [Hightouch](https://hightouch.io/)) which demonstrate how tabular data can be mapped to event (or people) data. 🥳
 
 # install
 
