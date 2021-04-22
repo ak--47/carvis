@@ -11,15 +11,15 @@ The primarily motivation for this utility is to feed reverse-ETLs (like [Census]
 # install
 
   - clone the repo
-  `git clone https://github.com/ak--47/carvis.git` 
+```git clone https://github.com/ak--47/carvis.git```
 
   - change your current working directory to `/carvis` :
-  `cd ~/carvis` 
+```cd ~/carvis```
   
 - install dependencies:
-`npm install`
-  
--  see [usage](#usage) for use-cases
+```npm install```
+
+- use Carvis to make data! see [usage](#usage) for use-cases
   
 # usage
   - generate some fake data with default params
@@ -29,6 +29,8 @@ The primarily motivation for this utility is to feed reverse-ETLs (like [Census]
   `data written to ./data/carvisData-events-{datetime}.csv`
   
 ![example data with default params](https://aktunes.neocities.org/carvis.png)
+
+- if you're on OSX, Carvis should pop open the `./data/` directory in Finder.
 
 # customizing the data
 Carvis lets you control the data that gets built in the CSV file. The general usage is:
