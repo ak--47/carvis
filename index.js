@@ -1,10 +1,14 @@
+//dependencies
 const commandLineArgs = require('command-line-args');
 const Chance = require('chance');
 const fs = require('fs');
 const dayjs = require('dayjs');
 const readline = require('readline');
-const { spawn } = require('child_process');
+const {
+    spawn
+} = require('child_process');
 
+//yay bannerz
 const banner = `
     ,o888888o.           .8.          8 888888888o. '8.'888b           ,8'  8 8888    d888888o.   
    8888     '88.        .888.         8 8888    '88. '8.'888b         ,8'   8 8888  .'8888:' '88. 
@@ -23,8 +27,9 @@ console.log('by AK');
 console.log('ak@mixpanel.com');
 console.log('\n\n');
 
+//cli arguments
 const optionDefinitions = [
-    // { name: 'verbose', alias: 'v', type: Boolean },
+
     {
         name: 'cols',
         alias: 'c',
@@ -54,6 +59,8 @@ const optionDefinitions = [
 ];
 
 const options = commandLineArgs(optionDefinitions);
+
+//default options
 const {
     seed = "i am carvis",
         rows = 1000,
@@ -62,16 +69,25 @@ const {
         people = false
 } = options;
 
+//time stuff
 const secondsInDay = 86400;
 const secondsInHour = 3600;
 const now = Math.round(new Date().getTime() / 1000);
 const earliestTime = now - (secondsInDay * days);
-let numUsers = 0;
 
-const chance = new Chance(seed);
-const trueRandom = new Chance();
+//the file we will eventually write to
+const fileName = `carvisData-${people ? 'users' : 'events'}-${now}.csv`
+
+//three instances of chance
+const guidChance = new Chance(seed);
+const userChance = new Chance(seed);
+const trueRandom = new Chance(); //this one is TRULY random
+
+
+//store columns here
 const columns = [];
 
+//create objects of each column
 cols.forEach((col) => {
     let split = col.split(':');
     let prop = {
@@ -86,7 +102,7 @@ cols.forEach((col) => {
         })
     });
 
-    //duplicate some prop values
+    //duplicate some prop values to get variation in the data
     while (dupeLikelihood) {
         let dupeValue = trueRandom.pickone(prop.values);
         prop.values.push(dupeValue);
@@ -102,38 +118,47 @@ cols.forEach((col) => {
 });
 
 
-//prepare columns
+//all files get these headers
 let csvFile = `insert_id,guid,`;
 
+//people files get these headers
 if (people) {
-    csvFile += `$name,$email,$phone,$avatar,$created,$latitude,$longitude,`
-}
+    csvFile += `$name,$email,$phone,$avatar,$created,$latitude,$longitude,`;
+    
+} 
 
+//event files get these headers
 else {
-	csvFile += `time,`	
+    csvFile += `time,`;
 }
 
-
+//prepare and append custom headers
 let allCols = columns.map(col => col.header).join();
 csvFile += allCols + `\n`;
 
-let i = 0;
-while (i < rows) {
-    let user = chance.guid();
+
+let numRecordsMade = 0;
+let numUsers = 0;
+
+//the main loop that creates users
+while (numRecordsMade < rows) {
+    let user = guidChance.guid();
     numUsers++
 
-
-    //loop randomly for each user
+    //this will be true or false after the first loop to determine if the user gets multiple records
     let loopLikelihood;
 
-    do {    	
-        i++;
-        showProgress(i)
+    //always make one record for a user
+    do {
+        numRecordsMade++;
+        showProgress(numRecordsMade)
+        
+        //for people profiles, figure out all this stuff
         if (people) {
-            const gender = chance.pickone(['male', 'female']);
-            const name = `${chance.first({gender: gender})} ${chance.last()}`;
+            const gender = userChance.pickone(['male', 'female']);
+            const name = `${userChance.first({gender: gender})} ${userChance.last()}`;
             const avatarPrefix = `https://randomuser.me/api/portraits`;
-            const randomAvatarNumber = chance.integer({
+            const randomAvatarNumber = userChance.integer({
                 min: 1,
                 max: 99
             });
@@ -145,14 +170,15 @@ while (i < rows) {
             const latitude = coords[0]
             const longitude = coords[1]
 
-
-            csvFile += `${trueRandom.hash()},${user},${name},${chance.email()},${'+'+chance.phone({formatted: false, country: "us"})},${avatarURL},${dayjs.unix(trueRandom.integer({min: earliestTime, max: now})).format("YYYY-MM-DD hh:mm:ss")},${latitude},${longitude},${chooseRowValues(columns)}\n`;
+            //append the people record to the CSV file
+            csvFile += `${trueRandom.hash()},${user},${name},${userChance.email()},${'+'+userChance.phone({formatted: false, country: "us"})},${avatarURL},${dayjs.unix(trueRandom.integer({min: earliestTime, max: now})).format("YYYY-MM-DD hh:mm:ss")},${latitude},${longitude},${chooseRowValues(columns)}\n`;
 
         } else {
+        	//append the event record to the CSV file
             csvFile += `${trueRandom.hash()},${user},${getTime(earliestTime, now)},${chooseRowValues(columns)}\n`;
         }
 
-
+        //for events, determine if the user will do another event
         if (!people) {
             try {
                 loopLikelihood = trueRandom.bool({
@@ -173,7 +199,7 @@ while (i < rows) {
 
         }
 
-        //don't loop for people
+        //never loop for people; only 1 record per person
         else {
             loopLikelihood = false;
         }
@@ -184,6 +210,7 @@ while (i < rows) {
 
 }
 
+//helper to get realstically weighted time
 function getTime(earliest = earliestTime, latest = now) {
     let midPoint = Math.round((earliest + latest) / 2);
     let lowBoundary = Math.round(trueRandom.normal({
@@ -218,7 +245,7 @@ function getTime(earliest = earliestTime, latest = now) {
             likelihood: 5
         })) {
         chosenDate = trueRandom.integer({
-            "min": now - (secondsInHour * chance.integer({
+            "min": now - (secondsInHour * trueRandom.integer({
                 min: 1,
                 max: 12
             })),
@@ -229,11 +256,12 @@ function getTime(earliest = earliestTime, latest = now) {
     return dayjs.unix(chosenDate).format("YYYY-MM-DD hh:mm:ss");
 }
 
-//pick data from each col for each row
+//helper to pick data from each col for each row
 function chooseRowValues(colDfn) {
     return colDfn.map(possibleValues => trueRandom.pickone(possibleValues.values)).join(',');
 }
 
+//helper to make sure we never have likelihood > 100
 function noMoreThan(num) {
     if (num >= 99) {
         return 95;
@@ -242,33 +270,13 @@ function noMoreThan(num) {
     }
 }
 
+//helper for status bar
 function showProgress(p) {
-    //readline.clearLine(process.stdout);
     readline.cursorTo(process.stdout, 0);
     process.stdout.write(`generated ${p} records...`);
 }
 
-
-const fileName = `carvisData-${people ? 'users' : 'events'}-${now}.csv`
-
-//write the data
-fs.writeFileSync(`./data/${fileName}`, csvFile.trim(), function(err) {
-    if (err) {
-        return console.log(err);
-    }
-});
-
-
-
-console.log(`\n\nfinished writing ${rows} records across ${numUsers} users for ${days} days with columns:`);
-console.log(`    ${columns.map(col => col.header).join('    \n    ')}`);
-console.log('\n');
-console.log(`data written to ./data/${fileName}`);
-console.log('\n');
-console.log('all finished!');
-console.log('\n');
-
-
+//helper to open the finder
 function openExplorerinMac(path, callback) {
     path = path || '/';
     let p = spawn('open', [path]);
@@ -278,10 +286,29 @@ function openExplorerinMac(path, callback) {
     });
 }
 
-try {
-	openExplorerinMac('./data')
-}
 
-catch (e) {
+//cool ... write the data
+fs.writeFileSync(`./data/${fileName}`, csvFile.trim(), function(err) {
+    if (err) {
+        return console.log(err);
+    }
+});
+
+
+//tell the user what happened
+console.log(`\n\nfinished writing ${rows} records across ${numUsers} users for ${days} days with columns:`);
+console.log(`    ${columns.map(col => col.header).join('    \n    ')}`);
+console.log('\n');
+console.log(`data written to ./data/${fileName}`);
+console.log('\n');
+console.log('all finished!');
+console.log('\n');
+
+
+
+//attempt to reveal the data folder in finder
+try {
+    openExplorerinMac('./data')
+} catch (e) {
 
 }
