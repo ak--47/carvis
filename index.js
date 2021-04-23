@@ -54,6 +54,11 @@ const optionDefinitions = [
         alias: 'p',
         type: Boolean,
         multiple: false
+    }, {
+        name: 'dimTable',
+        alias: 't',
+        type: Boolean,
+        multiple: false
     }
 
 ];
@@ -66,8 +71,23 @@ const {
         rows = 1000,
         cols = ["action:chooseColor,changeColor,removeColor,addColor", "favoriteColor:red,orange,yellow,green,blue,indigo,violet"],
         days = 30,
-        people = false
+        people = false,
+        dimTable = false
 } = options;
+
+//can't do dimension table + people
+if (dimTable && people) {
+    console.error('\nsorry, i cannot make a dimension table AND a user table at the same time\n');
+    throw new Error('\nERROR: cannont use --people and --dimTable options together (they are mutually exclusive)\n');
+}
+
+//determin file type
+let fileType;
+if (people) fileType = `people`;
+else if (dimTable) fileType = `dimTable`;
+else fileType = `events`;
+
+
 
 //time stuff
 const secondsInDay = 86400;
@@ -76,7 +96,7 @@ const now = Math.round(new Date().getTime() / 1000);
 const earliestTime = now - (secondsInDay * days);
 
 //the file we will eventually write to
-const fileName = `carvisData-${people ? 'users' : 'events'}-${now}.csv`
+const fileName = `carvisData-${fileType}-${now}.csv`;
 
 //three instances of chance
 const guidChance = new Chance(seed);
@@ -93,7 +113,7 @@ cols.forEach((col) => {
     let prop = {
         header: split[0],
         values: split[1].split(',')
-    }
+    };
 
     let dupeLikelihood = trueRandom.bool({
         likelihood: trueRandom.integer({
@@ -117,19 +137,26 @@ cols.forEach((col) => {
     columns.push(prop);
 });
 
+let csvFile = ``;
 
-//all files get these headers
-let csvFile = `insert_id,guid,`;
+if (dimTable) {
+    //dimension tables just get unit_id
+    csvFile += `unit_id,`;
+} else {
 
-//people files get these headers
-if (people) {
-    csvFile += `$name,$email,$phone,$avatar,$created,$latitude,$longitude,`;
-    
-} 
+    //events + people get these headers
+    csvFile += `insert_id,guid,`;
 
-//event files get these headers
-else {
-    csvFile += `time,`;
+    //people files get these headers
+    if (people) {
+        csvFile += `$name,$email,$phone,$avatar,$created,$latitude,$longitude,`;
+
+    }
+
+    //event files get these headers
+    else {
+        csvFile += `time,`;
+    }
 }
 
 //prepare and append custom headers
@@ -143,7 +170,7 @@ let numUsers = 0;
 //the main loop that creates users
 while (numRecordsMade < rows) {
     let user = guidChance.guid();
-    numUsers++
+    numUsers++;
 
     //this will be true or false after the first loop to determine if the user gets multiple records
     let loopLikelihood;
@@ -151,8 +178,8 @@ while (numRecordsMade < rows) {
     //always make one record for a user
     do {
         numRecordsMade++;
-        showProgress(numRecordsMade)
-        
+        showProgress(numRecordsMade);
+
         //for people profiles, figure out all this stuff
         if (people) {
             const gender = userChance.pickone(['male', 'female']);
@@ -166,20 +193,25 @@ while (numRecordsMade < rows) {
             const avatarURL = avatarPrefix + avatar;
             const coords = trueRandom.coordinates({
                 fixed: 2
-            }).split(',').map(coord => Number(coord.trim()))
-            const latitude = coords[0]
-            const longitude = coords[1]
+            }).split(',').map(coord => Number(coord.trim()));
+            const latitude = coords[0];
+            const longitude = coords[1];
 
             //append the people record to the CSV file
             csvFile += `${trueRandom.hash()},${user},${name},${userChance.email()},${'+'+userChance.phone({formatted: false, country: "us"})},${avatarURL},${dayjs.unix(trueRandom.integer({min: earliestTime, max: now})).format("YYYY-MM-DD hh:mm:ss")},${latitude},${longitude},${chooseRowValues(columns)}\n`;
 
+        }
+
+        //for dimension tables, just add the supplied cols
+        else if (dimTable) {
+            csvFile += `${numRecordsMade},${chooseRowValues(columns)}\n `;
         } else {
-        	//append the event record to the CSV file
+            //for events add a few more thing
             csvFile += `${trueRandom.hash()},${user},${getTime(earliestTime, now)},${chooseRowValues(columns)}\n`;
         }
 
         //for events, determine if the user will do another event
-        if (!people) {
+        if (!people && !dimTable) {
             try {
                 loopLikelihood = trueRandom.bool({
                     likelihood: noMoreThan(Math.round(trueRandom.normal({
@@ -199,13 +231,13 @@ while (numRecordsMade < rows) {
 
         }
 
-        //never loop for people; only 1 record per person
+        //never loop for people; only 1 record per person or dimTable
         else {
             loopLikelihood = false;
         }
 
 
-    } while (loopLikelihood)
+    } while (loopLikelihood);
 
 
 }
@@ -308,7 +340,7 @@ console.log('\n');
 
 //attempt to reveal the data folder in finder
 try {
-    openExplorerinMac('./data')
+    openExplorerinMac('./data');
 } catch (e) {
 
 }
