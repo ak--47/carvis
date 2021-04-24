@@ -1,7 +1,7 @@
 {
   "name": "carvis",
   "version": "1.0.0",
-  "description": "a csv machine",
+  "description": "a csv making machine",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "carvis": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "AK",
   "license": "ISC",
   "dependencies": {
     "chance": "^1.1.7",
@@ -27,5 +27,10 @@
     "unused": false,
     "loopfunc": true,
     "globals": {}
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ak--47/carvis.git"
+  },
+  "homepage": "https://github.com/ak--47/carvis"
 }
