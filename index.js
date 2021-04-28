@@ -81,7 +81,7 @@ if (dimTable && people) {
     throw new Error('\nERROR: cannont use --people and --dimTable options together (they are mutually exclusive)\n');
 }
 
-//determin file type
+//determine file type
 let fileType;
 if (people) fileType = `people`;
 else if (dimTable) fileType = `dimTable`;
@@ -305,7 +305,7 @@ function noMoreThan(num) {
 //helper for status bar
 function showProgress(p) {
     readline.cursorTo(process.stdout, 0);
-    process.stdout.write(`generated ${p} records...`);
+    process.stdout.write(`generated ${p-1} records...`);
 }
 
 //helper to open the finder
@@ -340,7 +340,8 @@ console.log('\n');
 
 //attempt to reveal the data folder in finder
 try {
-    openExplorerinMac('./data');
+    openExplorerinMac('./data')
 } catch (e) {
-
+    console.error('revealing files only works on a mac; sorry!')
 }
+

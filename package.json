@@ -32,5 +32,8 @@
     "type": "git",
     "url": "https://github.com/ak--47/carvis.git"
   },
-  "homepage": "https://github.com/ak--47/carvis"
+  "homepage": "https://github.com/ak--47/carvis",
+  "devDependencies": {
+    "eslint": "^7.25.0"
+  }
 }
