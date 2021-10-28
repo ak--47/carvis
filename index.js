@@ -59,6 +59,11 @@ const optionDefinitions = [
         alias: 't',
         type: Boolean,
         multiple: false
+    }, {
+        name: 'help',
+        alias: 'h',
+        type: Boolean,
+        multiple: false
     }
 
 ];
@@ -72,8 +77,24 @@ const {
         cols = ["action:chooseColor,changeColor,removeColor,addColor", "favoriteColor:red,orange,yellow,green,blue,indigo,violet"],
         days = 30,
         people = false,
-        dimTable = false
+        dimTable = false,
+        help = false
 } = options;
+
+if (help) {
+    console.log(`
+    EXAMPLES:
+    
+    npm run carvis -- --rows 10000
+    npm run carvis -- --rows 10000 --days 90
+    npm run carvis -- --cols eventName:foo,bar userType:baz,qux    
+    npm run carvis -- --cols eventName:foo,bar --seed "are you satisfied?"
+    npm run carvis -- --people --cols npsScore:1,2,3
+    npm run carvis -- --rows 500 --dimTable --cols hashTag:foo,bar,baz
+    
+    `)
+    return true;
+}
 
 //can't do dimension table + people
 if (dimTable && people) {
@@ -344,4 +365,3 @@ try {
 } catch (e) {
     console.error('revealing files only works on a mac; sorry!')
 }
-
