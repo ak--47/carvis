@@ -25,7 +25,7 @@ console.log(banner);
 console.log('... maker of CSV files');
 console.log('by AK');
 console.log('ak@mixpanel.com');
-console.log('\n\n');
+console.log('\n');
 
 //cli arguments
 const optionDefinitions = [
