@@ -21,7 +21,7 @@ Carvis can also make dimension tables for use in Mixpanel.
 - install dependencies:
 ```npm install```
 
-- use Carvis to make data! see [usage](#usage) for use-cases (or `npm run carvis -- --help)
+- use Carvis to make data! see [usage](#usage) for use-cases (or `npm run carvis -- --help`)
   
 # usage
   - generate some fake data with default params
