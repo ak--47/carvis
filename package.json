@@ -1,6 +1,6 @@
 {
   "name": "carvis",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "a csv making machine",
   "main": "index.js",
   "scripts": {
