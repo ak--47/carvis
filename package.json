@@ -1,6 +1,6 @@
 {
   "name": "carvis",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a csv making machine",
   "main": "index.js",
   "scripts": {
@@ -8,6 +8,9 @@
     "prune": "rm -rf ./data/*",
     "carvis": "node index.js"
   },
+  "bin": {
+    "carvis": "./index.js"
+},
   "keywords": [],
   "author": "AK",
   "license": "ISC",

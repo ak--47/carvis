@@ -1,4 +1,5 @@
-//dependencies
+#! /usr/bin/env node
+ //dependencies
 const commandLineArgs = require('command-line-args');
 const Chance = require('chance');
 const fs = require('fs');
@@ -7,6 +8,9 @@ const readline = require('readline');
 const {
     spawn
 } = require('child_process');
+const path = require('path');
+
+const currentDirectory = path.resolve(process.cwd());
 
 //yay bannerz
 const banner = `
@@ -85,12 +89,14 @@ if (help) {
     console.log(`
     EXAMPLES:
     
-    npm run carvis -- --rows 10000
-    npm run carvis -- --rows 10000 --days 90
-    npm run carvis -- --cols eventName:foo,bar userType:baz,qux    
-    npm run carvis -- --cols eventName:foo,bar --seed "are you satisfied?"
-    npm run carvis -- --people --cols npsScore:1,2,3
-    npm run carvis -- --rows 500 --dimTable --cols hashTag:foo,bar,baz
+    carvis --rows 10000
+    carvis --rows 10000 --days 90
+    carvis --cols eventName:foo,bar userType:baz,qux    
+    carvis --cols eventName:foo,bar --seed "are you satisfied?"
+    carvis --people --cols npsScore:1,2,3
+    carvis --rows 500 --dimTable --cols hashTag:foo,bar,baz
+
+    docs: https://github.com/ak--47/carvis
     
     `)
     return true;
@@ -341,7 +347,7 @@ function openExplorerinMac(path, callback) {
 
 
 //cool ... write the data
-fs.writeFileSync(`./data/${fileName}`, csvFile.trim(), function(err) {
+fs.writeFileSync(path.resolve(`${currentDirectory}/${fileName}`), csvFile.trim(), function(err) {
     if (err) {
         return console.log(err);
     }
@@ -361,7 +367,7 @@ console.log('\n');
 
 //attempt to reveal the data folder in finder
 try {
-    openExplorerinMac('./data')
+    openExplorerinMac(currentDirectory)
 } catch (e) {
     console.error('revealing files only works on a mac; sorry!')
 }
