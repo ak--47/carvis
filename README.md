@@ -36,7 +36,17 @@ see [examples](#examples) and [API](#API) for more info
 
 # examples
 
-  - generate 10,000 rows of event data
+- generate some fake data as a CSV file
+```
+npx carvis
+```
+
+- generate some fake data as a JSON file
+```
+npx carvis --json
+```
+
+- generate 10,000 rows of event data
 ```
 npx carvis --rows 10000
 ```
@@ -45,14 +55,17 @@ npx carvis --rows 10000
 ```
 npx carvis --rows 10000 --days 90
 ```
+
 - generate event data with column `eventName` with values `appOpen`, `appInstall`, or `pageView`  **and** column `userType` with values `free`, `trial`, or `paid`:
 ``` 
 npx carvis --cols eventName:appOpen,appInstall,pageView userType:free,trial,paid
 ```
+
 - generate **people data** with column `npsScore` with values `1-10` but mostly `6`'s:
 ```
 npx carvis --people --cols npsScore:1,2,3,4,5,6,6,6,7,8,9,10
 ```
+
 - generate **TWO** CSV files with the *same users*; one with **event data** where `eventName` has values `appOpen`, `appInstall`, or `pageView` and one with **people data** where column `Satisfaction Score` has values `1-5`.
 
 `guid` values will match across both files (note the `seed` used for both is the same)
@@ -74,7 +87,6 @@ Carvis lets you control the data that gets built in the CSV file. The general us
 ```
 npm run carvis --{{option}} {{value}}
 ```
-
   
 
 here are the available options; all are optional and can be used in *any* order:
@@ -86,13 +98,12 @@ here are the available options; all are optional and can be used in *any* order:
 | `--days` | `-d` | the number of days (since today) to consider (default: `30`) |
 | `--seed` | `-s` | any alphanumeric phrase which controls how `guid` is generated; use the same seed to get the same users across multiple files
 |`--people`| `-p`| generate people profiles (including `$name`, `$email`, `$avatar`, etc...)|
-|`--dimTable`| `-t`| generate a dimension table (with `unit_id` as an integer for the first column)
+|`--dimTable`| `-t`| generate a dimension table (with `unit_id` as an integer for the first column)|
+|`--json`| `-j`| generate `NDJSON` format instead of CSV|
 
 note: the `dimTable` and `people` are mutually exclusive.
 
-  
-
-  
+   
 
 see [examples](#examples) for some recipes
 

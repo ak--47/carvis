@@ -9,6 +9,7 @@ const {
     spawn
 } = require('child_process');
 const path = require('path');
+const Papa = require('papaparse');
 
 const currentDirectory = path.resolve(process.cwd());
 
@@ -63,6 +64,12 @@ const optionDefinitions = [
         alias: 't',
         type: Boolean,
         multiple: false
+    },
+    {
+        name: 'json',
+        alises: 'j',
+        type: Boolean,
+        multiple: false
     }, {
         name: 'help',
         alias: 'h',
@@ -82,7 +89,8 @@ const {
         days = 30,
         people = false,
         dimTable = false,
-        help = false
+        help = false,
+        json = false
 } = options;
 
 if (help) {
@@ -91,6 +99,7 @@ if (help) {
     
     carvis --rows 10000
     carvis --rows 10000 --days 90
+    carvis --rows 10000 --days 90 --json
     carvis --cols eventName:foo,bar userType:baz,qux    
     carvis --cols eventName:foo,bar --seed "are you satisfied?"
     carvis --people --cols npsScore:1,2,3
@@ -123,7 +132,7 @@ const now = Math.round(new Date().getTime() / 1000);
 const earliestTime = now - (secondsInDay * days);
 
 //the file we will eventually write to
-const fileName = `carvisData-${fileType}-${now}.csv`;
+const fileName = `carvisData-${fileType}-${now}.${json ? 'ndjson': 'csv'}`;
 
 //three instances of chance
 const guidChance = new Chance(seed);
@@ -345,9 +354,20 @@ function openExplorerinMac(path, callback) {
     });
 }
 
+let dataToWrite;
+if (json) {
+    const config = {
+        header: true
+    }
+    dataToWrite = Papa.parse(csvFile.trim(), config).data.map(JSON.stringify).join('\n');
+}
+
+else {
+    dataToWrite = csvFile.trim();
+}
 
 //cool ... write the data
-fs.writeFileSync(path.resolve(`${currentDirectory}/${fileName}`), csvFile.trim(), function(err) {
+fs.writeFileSync(path.resolve(`${currentDirectory}/${fileName}`), dataToWrite, function(err) {
     if (err) {
         return console.log(err);
     }

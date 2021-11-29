@@ -10,14 +10,15 @@
   },
   "bin": {
     "carvis": "./index.js"
-},
+  },
   "keywords": [],
   "author": "AK",
   "license": "ISC",
   "dependencies": {
     "chance": "^1.1.7",
     "command-line-args": "^5.1.1",
-    "dayjs": "^1.10.4"
+    "dayjs": "^1.10.4",
+    "papaparse": "^5.3.1"
   },
   "jshintConfig": {
     "esversion": 9,
