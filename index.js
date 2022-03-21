@@ -240,7 +240,7 @@ while (numRecordsMade < rows) {
 
         //for dimension tables, just add the supplied cols
         else if (dimTable) {
-            csvFile += `${numRecordsMade},${chooseRowValues(columns)}\n `;
+            csvFile += `${numRecordsMade},${chooseRowValues(columns)}\n`;
         } else {
             //for events add a few more thing
             csvFile += `${trueRandom.hash()},${user},${getTime(earliestTime, now)},${chooseRowValues(columns)}\n`;
