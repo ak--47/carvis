@@ -45,6 +45,10 @@ npx carvis
 ```
 npx carvis --json
 ```
+- generate some fake data in the mixpanel format
+```
+npx carvis --mixpanel
+```
 
 - generate 10,000 rows of event data
 ```
@@ -95,11 +99,13 @@ here are the available options; all are optional and can be used in *any* order:
 | ------ | ------ | ------ |  
 | `--cols` |`-c` | define the columns **AND** values for your CSV file. the format is `columnName:value1,value2,value3` ... you can use this to create multiple columns |
 | `--rows` | `-r` | the number of rows/records to generate (default: `1000`) |
-| `--days` | `-d` | the number of days (since today) to consider (default: `30`) |
-| `--seed` | `-s` | any alphanumeric phrase which controls how `guid` is generated; use the same seed to get the same users across multiple files
+| `--days` | `-d` | the number of days (since today) to consider (default: `5`) |
+| `--seed` | `-s` | any alphanumeric phrase which controls how `distinct_id` is generated; use the same seed to get the same users across multiple files
 |`--people`| `-p`| generate people profiles (including `$name`, `$email`, `$avatar`, etc...)|
 |`--dimTable`| `-t`| generate a dimension table (with `unit_id` as an integer for the first column)|
 |`--json`| `-j`| generate `NDJSON` format instead of CSV|
+|`--mixpanel`| `-m`| generate mixpanel data in `NDJSON` format |
+|`--silent`| `-s`| don't log stuff; pass filename to `stout` |
 
 note: the `dimTable` and `people` are mutually exclusive.
 
