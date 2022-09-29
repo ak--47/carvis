@@ -1,12 +1,12 @@
 {
   "name": "carvis",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "a csv making machine",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prune": "rm -rf ./data/*",
-    "carvis": "node index.js"
+    "carvis": "cd data && node ../index.js"
   },
   "bin": {
     "carvis": "./index.js"
