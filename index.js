@@ -110,18 +110,66 @@ const banner = `
     '8888888P'  .8'       '8. '88888. 8 8888     '88.        '8.'           8 8888  'Y8888P ,88P' 
 `;
 log(banner);
-log('... maker of CSV files');
+log('... maker of CSV files... and more!');
 log('by AK');
 log('ak@mixpanel.com');
 log('\n');
 
 
 if (help) {
+	console.log(`\tAPI:\n`);
+	console.table({
+		rows: {
+			option: `--rows`,
+			alias: `-r`,
+			purpose: `number of events/people in the data`,
+		},
+		days: {
+			option: `--days`,
+			alias: `-d`,
+			purpose: `number of days (since today) to model`,
+		},
+		seed: {
+			option: `--seed`,
+			alias: `-s`,
+			purpose: `alphanumeric phrase for pseudo-randomness`,
+		},
+		json: {
+			option: `--json`,
+			alias: `-j`,
+			purpose: `output valid JSON instead of CSV`,
+		},
+		mixpanel: {
+			option: `--mixpanel`,
+			alias: `-m`,
+			purpose: `make mixpanel data in NDJSON format`,
+		},
+		silent: {
+			option: `--silent`,
+			alias: `-s`,
+			purpose: `don't log stuff; pass filename to stdout`,
+		},
+		people: {
+			option: `--people`,
+			alias: `-p`,
+			purpose: `generate user profiles`,
+		},
+		dimTable: {
+			option: `--dimTable`,
+			alias: `-t`,
+			purpose: `generate a dimension table, incrementing on first column`,
+		},
+		columns :{
+			option: `--cols`,
+			alias: `-c`,
+			purpose: `define the col & value pairs; the format is "columnName:value1,value2,value3"`,
+		}
+	});
 	console.log(`
     EXAMPLES:
     
     carvis --rows 10000
-	carvis --rows 10000 --mixpanel
+    carvis --rows 10000 --mixpanel
     carvis --rows 10000 --days 90
     carvis --rows 10000 --days 90 --json
     carvis --cols event:foo,bar userType:baz,qux    
@@ -349,8 +397,8 @@ function getTime(earliest = earliestTime, latest = now) {
 			"max": now
 		});
 	}
-	
-	if (mixpanel) return chosenDate
+
+	if (mixpanel) return chosenDate;
 	return dayjs.unix(chosenDate).format("YYYY-MM-DD hh:mm:ss");
 }
 
@@ -393,18 +441,18 @@ if (json) {
 }
 
 else if (mixpanel) {
-	const jsonData = Papa.parse(csvFile.trim(), {header: true}).data;
-	const transformedData = jsonData.map((ev)=>{
-		let mpEvent =  {
+	const jsonData = Papa.parse(csvFile.trim(), { header: true }).data;
+	const transformedData = jsonData.map((ev) => {
+		let mpEvent = {
 			"event": ev?.event || "missing event name",
 			"properties": {
 				...ev,
 				time: Number(ev.time)
 			}
-		}
-		delete mpEvent.properties.event
-		return mpEvent
-	})
+		};
+		delete mpEvent.properties.event;
+		return mpEvent;
+	});
 	dataToWrite = transformedData.map(JSON.stringify).join('\n');
 }
 
@@ -429,18 +477,18 @@ log('\n');
 log('all finished!');
 log('\n');
 if (silent) {
-	const outputMsg = path.resolve(`${currentDirectory}/${fileName}`) + '\n'
+	const outputMsg = path.resolve(`${currentDirectory}/${fileName}`) + '\n';
 	process.stdout.write(outputMsg);
-	process.exit(0)
-} 
+	process.exit(0);
+}
 
 
 if (!silent) {
-//attempt to reveal the data folder in finder
-try {
-	openExplorerinMac(currentDirectory);
-} catch (e) {
-	console.error('revealing files only works on a mac; sorry!');
+	//attempt to reveal the data folder in finder
+	try {
+		openExplorerinMac(currentDirectory);
+	} catch (e) {
+		console.error('revealing files only works on a mac; sorry!');
+	}
 }
-}
-process.exit(0)
+process.exit(0);

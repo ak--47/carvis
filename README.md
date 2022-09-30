@@ -105,9 +105,9 @@ here are the available options; all are optional and can be used in *any* order:
 |`--dimTable`| `-t`| generate a dimension table (with `unit_id` as an integer for the first column)|
 |`--json`| `-j`| generate `NDJSON` format instead of CSV|
 |`--mixpanel`| `-m`| generate mixpanel data in `NDJSON` format |
-|`--silent`| `-s`| don't log stuff; pass filename to `stout` |
+|`--silent`| `-s`| don't log stuff; pass filename to `stdout` |
 
-note: the `dimTable` and `people` are mutually exclusive.
+note: the `dimTable` and `people` options are mutually exclusive. the `mixpanel` and `json` options are also mutually exclusive.
 
    
 
