@@ -159,7 +159,7 @@ if (help) {
 			alias: `-t`,
 			purpose: `generate a dimension table, incrementing on first column`,
 		},
-		columns :{
+		columns: {
 			option: `--cols`,
 			alias: `-c`,
 			purpose: `define the col & value pairs; the format is "columnName:value1,value2,value3"`,
@@ -196,9 +196,18 @@ if (json && mixpanel) {
 
 //determine file type
 let fileType;
-if (people) fileType = `people`;
-else if (dimTable) fileType = `dimTable`;
-else fileType = `events`;
+let events;
+if (people) { 
+	fileType = `people`; events = false; 
+}
+else if (dimTable) {
+	fileType = `dimTable`;
+	if (!people) events = true;
+}
+else {
+	fileType = `events`;
+	events = true;
+} 
 
 
 
@@ -257,19 +266,15 @@ if (dimTable) {
 	csvFile += `unit_id,`;
 } else {
 
-	//events + people get these headers
-	csvFile += `$insert_id,distinct_id,`;
+	//events get these headers
+	if (events) csvFile += `$insert_id,distinct_id,time,`;
 
 	//people files get these headers
 	if (people) {
-		csvFile += `$name,$email,$phone,$avatar,$created,$latitude,$longitude,`;
+		csvFile += `$distinct_id,$name,$email,$phone,$avatar,$created,$latitude,$longitude,`;
 
 	}
 
-	//event files get these headers
-	else {
-		csvFile += `time,`;
-	}
 }
 
 //prepare and append custom headers
@@ -311,7 +316,7 @@ while (numRecordsMade < rows) {
 			const longitude = coords[1];
 
 			//append the people record to the CSV file
-			csvFile += `${trueRandom.hash()},${user},${name},${userChance.email()},${'+' + userChance.phone({ formatted: false, country: "us" })},${avatarURL},${dayjs.unix(trueRandom.integer({ min: earliestTime, max: now })).format("YYYY-MM-DD hh:mm:ss")},${latitude},${longitude},${chooseRowValues(columns)}\n`;
+			csvFile += `${user},${name},${userChance.email()},${'+' + userChance.phone({ formatted: false, country: "us" })},${avatarURL},${dayjs.unix(trueRandom.integer({ min: earliestTime, max: now })).format("YYYY-MM-DD hh:mm:ss")},${latitude},${longitude},${chooseRowValues(columns)}\n`;
 
 		}
 
