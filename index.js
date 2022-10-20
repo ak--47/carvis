@@ -80,7 +80,7 @@ const {
 	seed = "i am carvis",
 	rows = 1000,
 	cols = ["event:page_view,link_click,button_click,log_in,watch_video,page_view,watch_video,page_view", "colorTheme:red,orange,yellow,green,blue,indigo,violet", "luckyNumber:2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,42,42,42,42,420"],
-	days = 5,
+	days = 42,
 	people = false,
 	dimTable = false,
 	help = false,
