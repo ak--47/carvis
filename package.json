@@ -1,11 +1,11 @@
 {
   "name": "carvis",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "a csv making machine",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-	"testWatch": "jest --watchAll --verbose",
+    "testWatch": "jest --watchAll --verbose",
     "prune": "rm -rf ./data/*",
     "carvis": "cd data && node ../index.js",
     "post": "npm publish"
@@ -17,6 +17,7 @@
   "author": "AK",
   "license": "ISC",
   "dependencies": {
+    "ak-tools": "^1.0.17",
     "chance": "^1.1.7",
     "command-line-args": "^5.1.1",
     "dayjs": "^1.10.4",

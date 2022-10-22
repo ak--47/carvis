@@ -10,6 +10,8 @@ const {
 } = require('child_process');
 const path = require('path');
 const Papa = require('papaparse');
+const u = require('ak-tools');
+const track = u.tracker('carvis');
 
 const currentDirectory = path.resolve(process.cwd());
 
@@ -114,6 +116,7 @@ log('... maker of CSV files... and more!');
 log('by AK');
 log('ak@mixpanel.com');
 log('\n');
+track('start', options)
 
 
 if (help) {
@@ -197,8 +200,8 @@ if (json && mixpanel) {
 //determine file type
 let fileType;
 let events;
-if (people) { 
-	fileType = `people`; events = false; 
+if (people) {
+	fileType = `people`; events = false;
 }
 else if (dimTable) {
 	fileType = `dimTable`;
@@ -207,7 +210,7 @@ else if (dimTable) {
 else {
 	fileType = `events`;
 	events = true;
-} 
+}
 
 
 
@@ -467,6 +470,7 @@ else {
 
 //cool ... write the data
 fs.writeFileSync(path.resolve(`${currentDirectory}/${fileName}`), dataToWrite, function (err) {
+	track('end', options)
 	if (err) {
 		return console.log(err);
 	}
