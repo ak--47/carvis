@@ -12,6 +12,7 @@ const path = require('path');
 const Papa = require('papaparse');
 const u = require('ak-tools');
 const track = u.tracker('carvis');
+const runId = u.uid(32);
 
 const currentDirectory = path.resolve(process.cwd());
 
@@ -116,7 +117,7 @@ log('... maker of CSV files... and more!');
 log('by AK');
 log('ak@mixpanel.com');
 log('\n');
-track('start', options)
+track('start', {runId, ...options})
 
 
 if (help) {
@@ -469,8 +470,7 @@ else {
 }
 
 //cool ... write the data
-fs.writeFileSync(path.resolve(`${currentDirectory}/${fileName}`), dataToWrite, function (err) {
-	track('end', options)
+fs.writeFileSync(path.resolve(`${currentDirectory}/${fileName}`), dataToWrite, function (err) {	
 	if (err) {
 		return console.log(err);
 	}
@@ -488,7 +488,7 @@ log('\n');
 if (silent) {
 	const outputMsg = path.resolve(`${currentDirectory}/${fileName}`) + '\n';
 	process.stdout.write(outputMsg);
-	process.exit(0);
+	//process.exit(0);
 }
 
 
@@ -500,4 +500,6 @@ if (!silent) {
 		console.error('revealing files only works on a mac; sorry!');
 	}
 }
-process.exit(0);
+
+track('end', {runId, ...options})
+//process.exit(0);
