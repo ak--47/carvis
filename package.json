@@ -1,6 +1,6 @@
 {
   "name": "carvis",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "a csv making machine",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,7 @@
   "bin": {
     "carvis": "./index.js"
   },
-  "keywords": [],
+  "keywords": ["carvis", "mixpanel", "fake data", "dummy data", "csv", "json"],
   "author": "AK",
   "license": "ISC",
   "dependencies": {
