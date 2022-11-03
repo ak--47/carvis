@@ -2,7 +2,6 @@
 //dependencies
 const commandLineArgs = require('command-line-args');
 const Chance = require('chance');
-const fs = require('fs');
 const dayjs = require('dayjs');
 const readline = require('readline');
 const {
@@ -94,7 +93,7 @@ const {
 
 function log(data, silent = options.silent) {
 	if (!silent) {
-		console.log(data);
+		process.stderr.write(data);
 	}
 }
 
@@ -113,11 +112,11 @@ const banner = `
     '8888888P'  .8'       '8. '88888. 8 8888     '88.        '8.'           8 8888  'Y8888P ,88P' 
 `;
 log(banner);
-log('... maker of CSV files... and more!');
-log('by AK');
-log('ak@mixpanel.com');
-log('\n');
-track('start', {runId, ...options})
+log('\n... maker of CSV files... and more!');
+log('\n  by AK');
+log('\n  ak@mixpanel.com');
+log('\n\n');
+track('start', { runId, ...options });
 
 
 if (help) {
@@ -427,8 +426,8 @@ function noMoreThan(num) {
 
 //helper for status bar
 function showProgress(p) {
-	readline.cursorTo(process.stdout, 0);
-	process.stdout.write(`generated ${p - 1} records...`);
+	readline.cursorTo(process.stderr, 0);
+	process.stderr.write(`\tgenerated ${u.comma(p - 1)} records...`);
 }
 
 //helper to open the finder
@@ -470,36 +469,26 @@ else {
 }
 
 //cool ... write the data
-fs.writeFileSync(path.resolve(`${currentDirectory}/${fileName}`), dataToWrite, function (err) {	
-	if (err) {
-		return console.log(err);
+const directory = u.mkdir('./carvis-data');
+const filePath = `${directory}/${fileName}`;
+u.touch(filePath, dataToWrite).then(() => {
+	//tell the user what happened
+	log(`\n\nfinished writing ${rows} records across ${numUsers} users for ${days} days with columns:\n`);
+	log(`    ${columns.map(col => col.header).join('    \n    ')}`);
+	log('\n');
+	log(`\n...data written to ./carvis-data/${fileName}`);
+	log('\n\n');
+	const outputMsg = path.resolve(filePath) + '\n';
+	if (!silent) {
+		//attempt to reveal the data folder in finder
+		try {
+			openExplorerinMac(currentDirectory);
+		} catch (e) {
+			console.error('revealing files only works on a mac; sorry!');
+		}
+		
 	}
-});
-
-
-//tell the user what happened
-log(`\n\nfinished writing ${rows} records across ${numUsers} users for ${days} days with columns:`);
-log(`    ${columns.map(col => col.header).join('    \n    ')}`);
-log('\n');
-log(`data written to ./data/${fileName}`);
-log('\n');
-log('all finished!');
-log('\n');
-if (silent) {
-	const outputMsg = path.resolve(`${currentDirectory}/${fileName}`) + '\n';
 	process.stdout.write(outputMsg);
-	//process.exit(0);
-}
 
-
-if (!silent) {
-	//attempt to reveal the data folder in finder
-	try {
-		openExplorerinMac(currentDirectory);
-	} catch (e) {
-		console.error('revealing files only works on a mac; sorry!');
-	}
-}
-
-track('end', {runId, ...options})
-//process.exit(0);
+	track('end', { runId, ...options });
+});

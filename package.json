@@ -1,19 +1,19 @@
 {
   "name": "carvis",
-  "version": "1.0.14",
+  "version": "1.0.16",
   "description": "a csv making machine",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "testWatch": "jest --watchAll --verbose",
-    "prune": "rm -rf ./data/*",
-    "carvis": "cd data && node ../index.js",
+    "prune": "rm -rf ./carvis-data/*",
+    "carvis": "node ../index.js",
     "post": "npm publish"
   },
   "bin": {
     "carvis": "./index.js"
   },
-  "keywords": ["carvis", "mixpanel", "fake data", "dummy data", "csv", "json"],
+  "keywords": ["carvis", "mixpanel", "fake data", "dummy data", "csv", "json", "CLI"],
   "author": "AK",
   "license": "ISC",
   "dependencies": {

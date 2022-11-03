@@ -16,8 +16,8 @@ const fileExtensions = ['csv', 'ndjson']
 const { execSync } = require("child_process");
 
 
-const command = `cd data && node ../index.js`
-const suffix = `--silent && cd ..`
+const command = `node ./index.js`
+const suffix = `--silent`
 
 describe('do tests work?', () => {
 	test('a = a', () => {

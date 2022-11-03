@@ -6,8 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 
 #data folder
-data/*
-!data/.gitkeep 
+carvis-data/*
+!carvis-data/.gitkeep 
 
 #osx remnants
 .DS_Store
