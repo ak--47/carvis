@@ -68,9 +68,14 @@ const optionDefinitions = [
 	},
 	{
 		name: 'silent',
-		alises: 's',
+		aliases: 's',
 		type: Boolean,
 		multiple: false
+	},
+	{
+		name: 'scd',
+		type: Boolean,
+		multiple: false,
 	}
 
 ];
@@ -89,6 +94,7 @@ const {
 	json = false,
 	mixpanel = false,
 	silent = false,
+	scd = false
 } = options;
 
 function log(data, silent = options.silent) {
@@ -166,6 +172,11 @@ if (help) {
 			option: `--cols`,
 			alias: `-c`,
 			purpose: `define the col & value pairs; the format is "columnName:value1,value2,value3"`,
+		},
+		columns: {
+			option: `--scd`,
+			alias: `-c`,
+			purpose: `make an SCD (type 2) table`,
 		}
 	});
 	console.log(`
@@ -179,6 +190,7 @@ if (help) {
     carvis --cols event:foo,bar --seed "are you satisfied?"
     carvis --people --cols npsScore:1,2,3
     carvis --rows 500 --dimTable --cols hashTag:foo,bar,baz
+	carvis --rows 500 --scd
 
     docs: https://github.com/ak--47/carvis
     
@@ -206,6 +218,10 @@ if (people) {
 else if (dimTable) {
 	fileType = `dimTable`;
 	if (!people) events = true;
+}
+else if (scd) {
+	fileType = `scd`;
+	events = true;
 }
 else {
 	fileType = `events`;
